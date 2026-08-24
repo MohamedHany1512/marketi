@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:marketi/features/onboarding/data/models/on_boarding_pages.dart';
+import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_cubit.dart';
+import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_states.dart';
+import 'package:marketi/features/onboarding/presentation/widgets/on_boarding_page.dart';
+
+class OnBoardingView extends StatelessWidget {
+  const OnBoardingView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => OnboardingCubit(),
+
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Pages
+              Expanded(
+                child: BlocBuilder<OnboardingCubit, OnboardingState>(
+                  builder: (context, state) {
+                    final cubit = context.read<OnboardingCubit>();
+
+                    return PageView.builder(
+                      controller: cubit.pageController,
+                      itemCount: onboardingPages.length,
+                      onPageChanged: cubit.onPageChanged,
+                      itemBuilder: (context, index) {
+                        return OnboardingPage(page: onboardingPages[index]);
+                      },
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Next / Get Started
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: BlocBuilder<OnboardingCubit, OnboardingState>(
+                  builder: (context, state) {
+                    final cubit = context.read<OnboardingCubit>();
+
+                    final isLastPage = state.currentPage == cubit.pageCount - 1;
+
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: () {
+                          if (isLastPage) {
+                            // Navigate to Login/Home
+                          } else {
+                            cubit.nextPage();
+                          }
+                        },
+                        child: Text(isLastPage ? 'Get Started' : 'Next',style: const TextStyle(color: Colors.white,fontSize: 18),),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
