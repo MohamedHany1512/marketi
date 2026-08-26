@@ -24,6 +24,7 @@ class OnBoardingView extends StatelessWidget {
                     final cubit = context.read<OnboardingCubit>();
 
                     return PageView.builder(
+                    
                       controller: cubit.pageController,
                       itemCount: onboardingPages.length,
                       onPageChanged: cubit.onPageChanged,
