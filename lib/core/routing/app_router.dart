@@ -7,6 +7,7 @@ import 'package:marketi/features/auth/login/presentation/view_model/login_cubit.
 import 'package:marketi/features/auth/login/presentation/views/login_view.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view/sign_up_screen.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view_model/sign_up_cubit.dart';
+import 'package:marketi/features/home/presentation/view/home_view.dart';
 
 import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_cubit.dart';
 import 'package:marketi/features/onboarding/presentation/view/on_boarding_view.dart';
@@ -40,7 +41,7 @@ class AppRouter {
         );
        case AppRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => const Placeholder(),
+          builder: (_) => const HomeView(),
         );
       default:
         return MaterialPageRoute(
