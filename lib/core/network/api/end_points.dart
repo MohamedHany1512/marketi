@@ -1,11 +1,12 @@
 class EndPoint {
-  static String baseUrl = "";
-  static String signIn = "";
-  static String signUp = "user/signup";
+  static String baseUrl = "https://supermarket-dan1.onrender.com/api/v1";
+  static String signIn = "/auth/signIn";
+  static String signUp = "/auth/signup";
   static String getUserDataEndPoint(id) {
-    return "user/get-user/$id";
+    return "/user/get-user/$id";
   }
 }
+
 
 class ApiKey {
   static String status = "status";
