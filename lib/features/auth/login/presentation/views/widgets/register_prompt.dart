@@ -14,7 +14,9 @@ class RegisterPrompt extends StatelessWidget {
           style: TextStyle(color: Colors.grey),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/signup');
+          },
           child: const Text('Register'),
         ),
       ],

@@ -63,7 +63,10 @@ class _LoginViewState extends State<LoginView> {
                   context.read<LoginCubit>().login(
                         email: emailController.text.trim(),
                         password: passwordController.text,
+                        
+
                       );
+                      
                 },
               );
             },

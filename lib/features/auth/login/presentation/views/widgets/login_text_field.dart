@@ -29,11 +29,6 @@ class LoginTextField extends StatelessWidget {
         hintText: hintText,
         prefixIcon: Icon(icon),
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.white,
-        border: border(const Color(0xFFBBD0FF)),
-        enabledBorder: border(const Color(0xFFBBD0FF)),
-        focusedBorder: border(const Color(0xFF3F7FFF)),
       ),
     );
   }

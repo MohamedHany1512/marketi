@@ -9,7 +9,7 @@ import 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepository repository;
 
-  LoginCubit(  {required this.repository}) : super(const LoginState());
+  LoginCubit({required this.repository}) : super(const LoginState());
 
   void togglePasswordVisibility() {
     emit(state.copyWith(obscurePassword: !state.obscurePassword));
@@ -66,7 +66,7 @@ class LoginCubit extends Cubit<LoginState> {
       await CacheHelper().saveData(key: ApiKey.email, value: result.user.email);
 
       await CacheHelper().saveData(key: ApiKey.phone, value: result.user.phone);
-
+   
       emit(
         state.copyWith(
           isLoading: false,
@@ -75,6 +75,7 @@ class LoginCubit extends Cubit<LoginState> {
           loginModel: result,
         ),
       );
+      
     } catch (e) {
       emit(
         state.copyWith(

@@ -5,6 +5,8 @@ import 'package:marketi/core/services/services_locator.dart';
 
 import 'package:marketi/features/auth/login/presentation/view_model/login_cubit.dart';
 import 'package:marketi/features/auth/login/presentation/views/login_view.dart';
+import 'package:marketi/features/auth/sign_up/presentation/view/sign_up_screen.dart';
+import 'package:marketi/features/auth/sign_up/presentation/view_model/sign_up_cubit.dart';
 
 import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_cubit.dart';
 import 'package:marketi/features/onboarding/presentation/view/on_boarding_view.dart';
@@ -12,9 +14,7 @@ import 'package:marketi/features/onboarding/presentation/view/on_boarding_view.d
 import 'app_routes.dart';
 
 class AppRouter {
-  static Route<dynamic> onGenerateRoute(
-    RouteSettings settings,
-  ) {
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.onBoarding:
         return MaterialPageRoute(
@@ -31,14 +31,21 @@ class AppRouter {
             child: const LoginView(),
           ),
         );
-
+      case AppRoutes.signUp:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<SignUpCubit>(),
+            child: const SignUpScreen(),
+          ),
+        );
+       case AppRoutes.home:
+        return MaterialPageRoute(
+          builder: (_) => const Placeholder(),
+        );
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Page not found'),
-            ),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('Page not found'))),
         );
     }
   }

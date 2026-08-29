@@ -21,9 +21,6 @@ class LoginRepository {
       },
     );
 
-    print('RESPONSE TYPE: ${response.runtimeType}');
-    print('RESPONSE: $response');
-
     return LoginModel.fromJson(
       response as Map<String, dynamic>,
     );
