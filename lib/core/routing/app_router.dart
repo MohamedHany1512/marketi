@@ -7,7 +7,14 @@ import 'package:marketi/features/auth/login/presentation/view_model/login_cubit.
 import 'package:marketi/features/auth/login/presentation/views/login_view.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view/sign_up_screen.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view_model/sign_up_cubit.dart';
+import 'package:marketi/features/home/data/models/brand_model.dart';
+import 'package:marketi/features/home/data/models/category_model.dart';
+import 'package:marketi/features/home/data/models/product_model.dart';
+import 'package:marketi/features/home/presentation/view/all_brands_view.dart';
+import 'package:marketi/features/home/presentation/view/all_categories_view.dart';
+import 'package:marketi/features/home/presentation/view/all_products_view.dart';
 import 'package:marketi/features/home/presentation/view/home_view.dart';
+import 'package:marketi/features/home/presentation/view_model/products_cubit.dart';
 
 import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_cubit.dart';
 import 'package:marketi/features/onboarding/presentation/view/on_boarding_view.dart';
@@ -28,20 +35,43 @@ class AppRouter {
       case AppRoutes.login:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<LoginCubit>(
-            create: (_) => getIt<LoginCubit>(),
+            create: (_) => sl<LoginCubit>(),
             child: const LoginView(),
           ),
         );
       case AppRoutes.signUp:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (context) => getIt<SignUpCubit>(),
+            create: (context) => sl<SignUpCubit>(),
             child: const SignUpScreen(),
           ),
         );
-       case AppRoutes.home:
+case AppRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => const HomeView(),
+          builder: (_) => BlocProvider<ProductsCubit>(
+            create: (_) => sl<ProductsCubit>()..fetchHomeData(),
+            child: const HomeView(),
+          ),
+        );
+        case AppRoutes.categories:
+        final categories = settings.arguments as List<CategoryModel>;
+        return MaterialPageRoute(
+          builder: (_) => AllCategoriesView(categories: categories),
+        );
+
+      case AppRoutes.products:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => AllProductsView(
+            title: args['title'] as String,
+            products: args['products'] as List<ProductModel>,
+          ),
+        );
+
+      case AppRoutes.brands:
+        final brands = settings.arguments as List<BrandModel>;
+        return MaterialPageRoute(
+          builder: (_) => AllBrandsView(brands: brands),
         );
       default:
         return MaterialPageRoute(

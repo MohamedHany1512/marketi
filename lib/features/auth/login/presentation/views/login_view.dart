@@ -36,14 +36,18 @@ class _LoginViewState extends State<LoginView> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Login successfully')),
                 );
+
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  (route) => false,
+                );
               }
 
               if (state.isFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      state.errorMessage ?? 'Something went wrong',
-                    ),
+                    content: Text(state.errorMessage ?? 'Something went wrong'),
                   ),
                 );
               }
@@ -56,17 +60,12 @@ class _LoginViewState extends State<LoginView> {
                 onTogglePassword: context
                     .read<LoginCubit>()
                     .togglePasswordVisibility,
-                onToggleRememberMe: context
-                    .read<LoginCubit>()
-                    .toggleRememberMe,
+                onToggleRememberMe: context.read<LoginCubit>().toggleRememberMe,
                 onLogin: () {
                   context.read<LoginCubit>().login(
-                        email: emailController.text.trim(),
-                        password: passwordController.text,
-                        
-
-                      );
-                      
+                    email: emailController.text.trim(),
+                    password: passwordController.text,
+                  );
                 },
               );
             },
