@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.8
+  dartz: ^0.10.1
   dio: ^5.11.0
   flutter:
     sdk: flutter
@@ -42,4 +43,3 @@ flutter:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Medium.ttf
           style: italic
-   

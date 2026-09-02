@@ -6,48 +6,53 @@ import 'package:marketi/core/network/api/dio_consumer.dart';
 
 import 'package:marketi/features/auth/login/data/repo/login_repository.dart';
 import 'package:marketi/features/auth/login/presentation/view_model/login_cubit.dart';
-import 'package:marketi/features/auth/sign_up/data/repo/sign_up_repo.dart';
 
-import 'package:marketi/features/auth/sign_up/presentation/view_model/sign_up_cubit.dart';
+import 'package:marketi/features/home/data/repos/products_repo.dart';
+import 'package:marketi/features/home/presentation/view_model/products_cubit.dart';
 
-final getIt = GetIt.instance;
+final GetIt sl = GetIt.instance;
 
 void setupServiceLocator() {
   // =========================
-  // Dio
+  // Network
   // =========================
 
-  getIt.registerLazySingleton<Dio>(() => Dio());
+  sl.registerLazySingleton<Dio>(
+    () => Dio(),
+  );
 
-  // =========================
-  // API Consumer
-  // =========================
-
-  getIt.registerLazySingleton<ApiConsumer>(
-    () => DioConsumer(dio: getIt<Dio>()),
+  sl.registerLazySingleton<ApiConsumer>(
+    () => DioConsumer(dio: sl<Dio>()),
   );
 
   // =========================
   // Login
   // =========================
 
-  getIt.registerLazySingleton<LoginRepository>(
-    () => LoginRepository(apiConsumer: getIt<ApiConsumer>()),
+  sl.registerLazySingleton<LoginRepository>(
+    () => LoginRepository(
+      apiConsumer: sl<ApiConsumer>(),
+    ),
   );
 
-  getIt.registerFactory<LoginCubit>(
-    () => LoginCubit(repository: getIt<LoginRepository>()),
+  sl.registerFactory<LoginCubit>(
+    () => LoginCubit(
+      repository: sl<LoginRepository>(),
+    ),
   );
 
   // =========================
-  // Sign Up
+  // Products
   // =========================
-
-  getIt.registerLazySingleton<SignUpRepo>(
-    () => SignUpRepo(apiConsumer: getIt<ApiConsumer>()),
+sl.registerLazySingleton<ProductsRepo>(
+    () => ProductsRepoImpl(
+      apiConsumer: sl<ApiConsumer>(),
+    ),
   );
 
-  getIt.registerFactory<SignUpCubit>(
-    () => SignUpCubit(repo: getIt<SignUpRepo>()),
+  sl.registerFactory<ProductsCubit>(
+    () => ProductsCubit(
+      sl<ProductsRepo>(),
+    ),
   );
 }

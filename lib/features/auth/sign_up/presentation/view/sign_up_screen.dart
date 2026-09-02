@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<SignUpCubit>(),
+      create: (_) => sl<SignUpCubit>(),
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         body: SafeArea(

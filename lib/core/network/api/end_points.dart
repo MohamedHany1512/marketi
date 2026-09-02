@@ -5,7 +5,7 @@ class EndPoint {
   static const String signIn = "/auth/signIn";
 
   static const String signUp = "/auth/signUp";
-
+  static const String homeProducts = "/home/products";
   static String getUserDataEndPoint(dynamic id) {
     return "/.user/get-user/$id";
   }
@@ -13,7 +13,7 @@ class EndPoint {
 class ApiKey {
   static const String status = "status";
   static const String errorMessage = "ErrorMessage";
-
+ 
   static const String email = "email";
   static const String password = "password";
 
@@ -33,4 +33,7 @@ class ApiKey {
   static const String user = "user";
   static const String role = "role";
   static const String image = "image";
+
+
+
 }

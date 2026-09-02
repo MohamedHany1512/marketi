@@ -12,9 +12,8 @@ class ApiInterceptor extends Interceptor {
       key: ApiKey.token,
     );
 
-    if (token != null) {
-      options.headers[ApiKey.token] =
-          '$token';
+    if (token != null && token.toString().isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
     }
 
     handler.next(options);
