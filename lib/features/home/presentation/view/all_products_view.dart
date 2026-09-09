@@ -1,32 +1,61 @@
 import 'package:flutter/material.dart';
-import '../../data/models/product_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:marketi/core/themes/app_theme.dart';
+
+import '../view_model/products_cubit.dart';
+import '../view_model/products_states.dart';
 import 'widgets/product_card_widget.dart';
 
 class AllProductsView extends StatelessWidget {
   final String title;
-  final List<ProductModel> products;
 
-  const AllProductsView({super.key, required this.title, required this.products});
+  const AllProductsView({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        foregroundColor: AppTheme.lightTheme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.7,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) => ProductCardWidget(product: products[index]),
+      body: BlocBuilder<ProductsCubit, ProductsState>(
+        builder: (context, state) {
+          return NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification.metrics.pixels >=
+                  notification.metrics.maxScrollExtent - 200) {
+                context.read<ProductsCubit>().loadMoreProducts();
+              }
+              return false;
+            },
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemCount: state.products.length + (state.isLoadingMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == state.products.length) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/productDetails',
+                      arguments: state.products[index],
+                    );
+                  },
+                  child: ProductCardWidget(product: state.products[index]));
+              },
+            ),
+          );
+        },
       ),
     );
   }

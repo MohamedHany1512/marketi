@@ -66,7 +66,7 @@ class LoginCubit extends Cubit<LoginState> {
       await CacheHelper().saveData(key: ApiKey.email, value: result.user.email);
 
       await CacheHelper().saveData(key: ApiKey.phone, value: result.user.phone);
-
+      await CacheHelper().saveData(key: ApiKey.image, value: result.user.image);
 
 
 

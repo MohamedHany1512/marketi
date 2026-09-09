@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:marketi/core/themes/app_colors.dart';
+import 'package:marketi/features/cart/presentation/view_model/cart_cubit.dart';
+import 'package:marketi/features/favorite/presentation/view_model/favourite_cubit.dart';
 import 'package:marketi/features/home/data/models/product_model.dart';
+import 'package:marketi/features/home/presentation/view/widgets/favourite_button.dart';
+import 'package:marketi/features/home/presentation/view/widgets/product_image.dart';
 
 class ProductCardWidget extends StatelessWidget {
   final ProductModel product;
@@ -10,16 +16,26 @@ class ProductCardWidget extends StatelessWidget {
     return product.price - (product.price * product.discountPercentage / 100);
   }
 
+  String? get imageUrl {
+    if (product.thumbnail.isNotEmpty) return product.thumbnail;
+    if (product.images.isNotEmpty) return product.images.first;
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isFavorite = context.select<FavouriteCubit, bool>(
+      (cubit) => cubit.isFavorite(product.id.toString()),
+    );
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundLight,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: AppColors.grey,
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -41,13 +57,13 @@ class ProductCardWidget extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xff3F80FF),
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       '${product.discountPercentage.toStringAsFixed(0)}% OFF',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.backgroundLight,
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,18 +71,10 @@ class ProductCardWidget extends StatelessWidget {
                   )
                 else
                   const SizedBox(height: 22),
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 17,
-                    color: Colors.grey,
-                  ),
+                FavoriteButton(
+                  isFavorite: isFavorite,
+                  onPressed: () =>
+                      context.read<FavouriteCubit>().toggleFavorite(product),
                 ),
               ],
             ),
@@ -74,33 +82,7 @@ class ProductCardWidget extends StatelessWidget {
             const SizedBox(height: 6),
 
             Expanded(
-              child: Center(
-                child: Image.network(
-                  product.thumbnail,
-                  fit: BoxFit.contain,
-                  width: double.infinity,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.image_not_supported_outlined,
-                      size: 55,
-                      color: Colors.grey.shade400,
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-
-                    return const Center(
-                      child: SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              child: Center(child: ProductImage(imageUrl: imageUrl)),
             ),
 
             const SizedBox(height: 6),
@@ -125,7 +107,7 @@ class ProductCardWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff3F80FF),
+                    color: AppColors.primary,
                   ),
                 ),
                 if (product.discountPercentage > 0) ...[
@@ -161,10 +143,12 @@ class ProductCardWidget extends StatelessWidget {
               width: double.infinity,
               height: 32,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CartCubit>().addToCart(product);
+                },
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xff3F80FF),
-                  side: const BorderSide(color: Color(0xff3F80FF)),
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -182,3 +166,4 @@ class ProductCardWidget extends StatelessWidget {
     );
   }
 }
+

@@ -1,6 +1,5 @@
 class EndPoint {
-  static const String baseUrl =
-      "https://supermarket-dan1.onrender.com/api/v1";
+  static const String baseUrl = "https://supermarket-dan1.onrender.com/api/v1";
 
   static const String signIn = "/auth/signIn";
 
@@ -9,11 +8,32 @@ class EndPoint {
   static String getUserDataEndPoint(dynamic id) {
     return "/.user/get-user/$id";
   }
+
+  static String getCategoryProducts(String categoryName) =>
+      '/home/products/category/$categoryName';
+
+  static String getBrandProducts(String brandName) =>
+      '/home/products/brand/$brandName';
+
+  // Cart
+  static const String getCart = '/user/getCart';
+  static const String addToCart = '/user/addToCart';
+  static String removeFromCart(String productId) =>
+      '/user/deleteFromCart/$productId';
+
+  // Wishlist
+  static const String getFavorite = '/user/getFavorite';
+  static const String addFavorite = '/user/addFavorite';
+  static const String deleteFavorite = '/user/deleteFavorite';
+
+  static const String productsFilter = '/home/productsFilter';
+  static const String profile = '/portfolio/userData';
 }
+
 class ApiKey {
   static const String status = "status";
   static const String errorMessage = "ErrorMessage";
- 
+
   static const String email = "email";
   static const String password = "password";
 
@@ -24,8 +44,7 @@ class ApiKey {
   static const String name = "name";
   static const String phone = "phone";
 
-  static const String confirmPassword =
-      "confirmPassword";
+  static const String confirmPassword = "confirmPassword";
 
   static const String location = "location";
   static const String profilePic = "profilePic";
@@ -33,7 +52,9 @@ class ApiKey {
   static const String user = "user";
   static const String role = "role";
   static const String image = "image";
-
-
-
+  // Wishlist
+  static const String favorite = '/favorite';
+  static const String getFavorite = '/user/getFavorite';
+  static const String addFavorite = '/user/addFavorite';
+  static const String deleteFavorite = '/user/deleteFavorite';
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:marketi/core/routing/app_routes.dart';
+import 'package:marketi/core/themes/app_theme.dart';
+
 import '../../data/models/category_model.dart';
 import 'widgets/category_item_widget.dart';
 
@@ -12,8 +15,8 @@ class AllCategoriesView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Categories'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        foregroundColor: AppTheme.lightTheme.appBarTheme.foregroundColor,
         elevation: 0,
       ),
       body: GridView.builder(
@@ -25,7 +28,26 @@ class AllCategoriesView extends StatelessWidget {
           mainAxisSpacing: 12,
         ),
         itemCount: categories.length,
-        itemBuilder: (context, index) => CategoryItemWidget(category: categories[index]),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return InkWell(
+            onTap: category.name == null
+                ? null
+                : () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.categoryProducts,
+                    arguments: category.name,
+                  ),
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.categoryProducts,
+                arguments: category.name,
+              ),
+              child: CategoryItemWidget(category: category),
+            ),
+          );
+        },
       ),
     );
   }

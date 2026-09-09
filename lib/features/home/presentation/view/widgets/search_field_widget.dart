@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:marketi/core/routing/app_routes.dart';
 
 class SearchFieldWidget extends StatefulWidget {
-  const SearchFieldWidget({
-    super.key,
-  });
+  const SearchFieldWidget({super.key});
 
   @override
-  State<SearchFieldWidget> createState() =>
-      _SearchFieldWidgetState();
+  State<SearchFieldWidget> createState() => _SearchFieldWidgetState();
 }
 
-class _SearchFieldWidgetState
-    extends State<SearchFieldWidget> {
+class _SearchFieldWidgetState extends State<SearchFieldWidget> {
   late final TextEditingController controller;
 
   @override
@@ -29,51 +26,25 @@ class _SearchFieldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: (value) {
-        // context
-            // .read<ProductsCubit>()
-            // .searchProducts(value);
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, AppRoutes.search);
       },
-      decoration: InputDecoration(
-        hintText: 'What are you looking for?',
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 13,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
         ),
-        prefixIcon: const Icon(
-          Icons.search,
-          color: Color(0xff3F80FF),
-        ),
-        suffixIcon: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.tune,
-            color: Color(0xff3F80FF),
-          ),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(
-            color: Colors.grey.shade200,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xff3F80FF),
-          ),
+        child: Row(
+          children: const [
+            Icon(Icons.search, color: Colors.grey),
+            SizedBox(width: 8),
+            Text(
+              'What are you looking for?',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
         ),
       ),
     );

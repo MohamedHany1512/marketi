@@ -7,17 +7,27 @@ import 'package:marketi/features/auth/login/presentation/view_model/login_cubit.
 import 'package:marketi/features/auth/login/presentation/views/login_view.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view/sign_up_screen.dart';
 import 'package:marketi/features/auth/sign_up/presentation/view_model/sign_up_cubit.dart';
+import 'package:marketi/features/cart/presentation/view/cart_screen.dart';
+import 'package:marketi/features/favorite/presentation/view/favourite_screen.dart';
+import 'package:marketi/features/favorite/presentation/view_model/favourite_cubit.dart';
 import 'package:marketi/features/home/data/models/brand_model.dart';
 import 'package:marketi/features/home/data/models/category_model.dart';
 import 'package:marketi/features/home/data/models/product_model.dart';
 import 'package:marketi/features/home/presentation/view/all_brands_view.dart';
 import 'package:marketi/features/home/presentation/view/all_categories_view.dart';
 import 'package:marketi/features/home/presentation/view/all_products_view.dart';
+import 'package:marketi/features/home/presentation/view/brand_products_view.dart';
+import 'package:marketi/features/home/presentation/view/category_products_view.dart';
 import 'package:marketi/features/home/presentation/view/home_view.dart';
+import 'package:marketi/features/home/presentation/view/product_details_view.dart';
 import 'package:marketi/features/home/presentation/view_model/products_cubit.dart';
 
 import 'package:marketi/features/onboarding/presentation/cubit/on_boarding_cubit.dart';
 import 'package:marketi/features/onboarding/presentation/view/on_boarding_view.dart';
+import 'package:marketi/features/profile/presentation/view/profile_screen.dart';
+import 'package:marketi/features/profile/presentation/view_model/profile_cubit.dart';
+import 'package:marketi/features/search/presentation/view/search_screen.dart';
+import 'package:marketi/features/search/presentation/view_model/search_cubit.dart';
 
 import 'app_routes.dart';
 
@@ -46,14 +56,14 @@ class AppRouter {
             child: const SignUpScreen(),
           ),
         );
-case AppRoutes.home:
+      case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProductsCubit>(
             create: (_) => sl<ProductsCubit>()..fetchHomeData(),
             child: const HomeView(),
           ),
         );
-        case AppRoutes.categories:
+      case AppRoutes.categories:
         final categories = settings.arguments as List<CategoryModel>;
         return MaterialPageRoute(
           builder: (_) => AllCategoriesView(categories: categories),
@@ -62,17 +72,58 @@ case AppRoutes.home:
       case AppRoutes.products:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) => AllProductsView(
-            title: args['title'] as String,
-            products: args['products'] as List<ProductModel>,
+          builder: (_) => BlocProvider<ProductsCubit>(
+            create: (_) =>
+                sl<ProductsCubit>()
+                  ..initializeProducts(args['products'] as List<ProductModel>),
+            child: AllProductsView(title: args['title'] as String),
           ),
         );
 
       case AppRoutes.brands:
         final brands = settings.arguments as List<BrandModel>;
+        return MaterialPageRoute(builder: (_) => AllBrandsView(brands: brands));
+
+      case AppRoutes.productDetails:
+        final product = settings.arguments as ProductModel;
         return MaterialPageRoute(
-          builder: (_) => AllBrandsView(brands: brands),
+          builder: (_) => ProductDetailsView(product: product),
         );
+      case AppRoutes.categoryProducts:
+        final categoryName = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => CategoryProductsView(categoryName: categoryName),
+        );
+      case AppRoutes.brandProducts:
+        return MaterialPageRoute(
+          builder: (_) =>
+              BrandProductsView(brandName: settings.arguments as String),
+        );
+      case AppRoutes.favourite:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<FavouriteCubit>(
+            child: const FavouriteScreen(),
+
+            create: (context) => sl<FavouriteCubit>()..getFavorites(),
+          ),
+        );
+      case AppRoutes.cart:
+        return MaterialPageRoute(builder: (_) => const CartScreen());
+      case AppRoutes.search:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => sl<SearchCubit>(),
+            child: const SearchScreen(),
+          ),
+        );
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<ProfileCubit>()..getProfile(),
+            child: const ProfileScreen(),
+          ),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (_) =>

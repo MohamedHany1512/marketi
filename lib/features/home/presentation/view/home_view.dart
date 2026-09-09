@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:marketi/core/common/custom_app_bar.dart';
 import 'package:marketi/core/routing/app_routes.dart';
+
+import 'package:marketi/features/home/presentation/view/widgets/nav_bar.dart';
 
 import '../view_model/products_cubit.dart';
 import '../view_model/products_states.dart';
@@ -28,32 +31,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            const CircleAvatar(
-              radius: 18,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'Hi Youssef !',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.notifications_none, color: Colors.blue),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+      appBar: buildAppBar(),
       body: BlocConsumer<ProductsCubit, ProductsState>(
         listener: (context, state) {
           if (state.paginationErrorMessage != null) {
@@ -111,10 +89,21 @@ class _HomeViewState extends State<HomeView> {
                   height: 210,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: state.products.take(1).length,
+                    itemCount: state.products.take(2).length,
                     itemBuilder: (context, index) => SizedBox(
                       width: 160,
-                      child: ProductCardWidget(product: state.products[index]),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.productDetails,
+                            arguments: state.products[index],
+                          );
+                        },
+                        child: ProductCardWidget(
+                          product: state.products[index],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -140,22 +129,21 @@ class _HomeViewState extends State<HomeView> {
                     mainAxisSpacing: 8,
                   ),
                   itemCount: state.categories.take(6).length,
-                  itemBuilder: (context, index) =>
-                      CategoryItemWidget(category: state.categories[index]),
-                ),
-                const SizedBox(height: 20),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 210,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.products.take(2).length,
-                    itemBuilder: (context, index) => SizedBox(
-                      width: 160,
-                      child: ProductCardWidget(product: state.products[index]),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.categoryProducts,
+                        arguments: state.categories[index].name,
+                      );
+                    },
+                    child: CategoryItemWidget(
+                      category: state.categories[index],
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
+
                 const SizedBox(height: 20),
                 HomeSectionHeaderWidget(
                   title: 'Brands',
@@ -173,51 +161,24 @@ class _HomeViewState extends State<HomeView> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: state.brands.take(3).length,
-                    itemBuilder: (context, index) =>
-                        BrandItemWidget(brand: state.brands[index]),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 210,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.products.take(2).length,
-                    itemBuilder: (context, index) => SizedBox(
-                      width: 160,
-                      child: ProductCardWidget(product: state.products[index]),
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.brandProducts,
+                          arguments: state.brands[index].name,
+                        );
+                      },
+                      child: BrandItemWidget(brand: state.brands[index]),
                     ),
                   ),
                 ),
-                if (state.isLoadingMore)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
               ],
             ),
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
-        ],
-      ),
+      bottomNavigationBar: NavBar(),
     );
   }
 }
